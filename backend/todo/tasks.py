@@ -57,9 +57,10 @@ def _send_telegram_message(chat_id: int, text: str) -> bool:
 
     url = f"https://api.telegram.org/bot{token}/sendMessage"
     payload = {"chat_id": chat_id, "text": text}
+    timeout = settings.TELEGRAM_REQUEST_TIMEOUT
 
     try:
-        with httpx.Client(timeout=10) as client:
+        with httpx.Client(timeout=timeout) as client:
             response = client.post(url, json=payload)
             if response.status_code == 200:
                 return True

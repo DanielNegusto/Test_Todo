@@ -36,9 +36,6 @@ class TaskViewSet(viewsets.ModelViewSet):
             .order_by("-created_at")
         )
 
-    def perform_create(self, serializer: TaskSerializer):
-        serializer.save(user=self.request.user)
-
 
 class TelegramRegisterView(APIView):
     """
@@ -56,9 +53,10 @@ class TelegramRegisterView(APIView):
         if not telegram_chat_id:
             return Response({"detail": "telegram_chat_id обязателен"}, status=status.HTTP_400_BAD_REQUEST)
 
-        telegram_user_id = getattr(request.user.profile, "telegram_user_id", None) or request.META.get(
-            "HTTP_X_TELEGRAM_USER_ID"
-        )
+        profile = UserProfile.objects.filter(user=request.user).first()
+        telegram_user_id = profile.telegram_user_id if profile else None
+        if not telegram_user_id:
+            telegram_user_id = request.META.get("HTTP_X_TELEGRAM_USER_ID")
         if not telegram_user_id:
             return Response({"detail": "Не найден Telegram user id"}, status=status.HTTP_400_BAD_REQUEST)
 

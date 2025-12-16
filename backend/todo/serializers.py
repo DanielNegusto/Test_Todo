@@ -19,7 +19,10 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def validate_name(self, value: str) -> str:
         user = self.context["request"].user
-        if Category.objects.filter(user=user, name=value).exists():
+        qs = Category.objects.filter(user=user, name=value)
+        if self.instance:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
             raise serializers.ValidationError("Категория с таким именем уже существует.")
         return value
 
