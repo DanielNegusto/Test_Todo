@@ -19,9 +19,10 @@ bot = Bot(token=settings.bot_token)
 dp = Dispatcher()
 router = Router()
 dp.include_router(router)
+router.include_router(create_task_dialog)
 
 backend_api = BackendAPI()
-setup_dialogs(dp, dialogs=[create_task_dialog])
+setup_dialogs(dp)
 
 
 @router.message(Command("start"))

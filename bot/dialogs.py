@@ -8,9 +8,12 @@ from aiogram_dialog.widgets.text import Const, Format
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
 
+from dateutil import parser
+from django.utils import timezone
+
 from api import BackendAPI
 
-DATE_FORMAT = "%Y-%m-%d %H:%M"
+DATE_HINT = "YYYY-MM-DD HH:MM (опционально +HH:MM)"
 backend_api = BackendAPI()
 
 
@@ -38,12 +41,22 @@ async def process_description(message: Message, message_input: MessageInput, man
 
 
 async def process_due_date(message: Message, message_input: MessageInput, manager: DialogManager):
-    try:
-        parsed = datetime.strptime(message.text.strip(), DATE_FORMAT)
-    except ValueError:
-        await message.answer(f"Некорректный формат даты. Используйте: {DATE_FORMAT}")
+    text = (message.text or "").strip()
+    if not text:
+        await message.answer(f"Укажите дату и время в формате {DATE_HINT}")
         return
-    manager.dialog_data["due_date"] = parsed.isoformat()
+
+    try:
+        dt = parser.parse(text)
+    except Exception:  # noqa: BLE001
+        await message.answer(f"Не удалось разобрать дату. Используйте формат {DATE_HINT}")
+        return
+
+    # Если без таймзоны — считаем часовым поясом сервера (America/Adak)
+    if dt.tzinfo is None:
+        dt = timezone.make_aware(dt, timezone.get_current_timezone())
+
+    manager.dialog_data["due_date"] = dt.isoformat()
     await manager.next()
 
 
@@ -81,7 +94,7 @@ create_task_dialog = Dialog(
         state=CreateTaskSG.description,
     ),
     Window(
-        Const(f"Введите дедлайн в формате {DATE_FORMAT} (время в часовом поясе сервера):"),
+        Const(f"Введите дедлайн. Пример: 2025-12-31 18:00 или 2025-12-31 18:00+03:00\nФормат: {DATE_HINT}"),
         MessageInput(process_due_date),
         state=CreateTaskSG.due_date,
     ),
