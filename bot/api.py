@@ -30,6 +30,21 @@ class BackendAPI:
             resp.raise_for_status()
             return resp.json()
 
+    async def list_categories(self, telegram_user_id: int) -> List[Dict[str, Any]]:
+        url = f"{self.base_url}/api/categories/"
+        async with httpx.AsyncClient(timeout=self.timeout) as client:
+            resp = await client.get(url, headers=self._headers(telegram_user_id))
+            resp.raise_for_status()
+            return resp.json()
+
+    async def create_category(self, telegram_user_id: int, name: str) -> Dict[str, Any]:
+        url = f"{self.base_url}/api/categories/"
+        payload = {"name": name}
+        async with httpx.AsyncClient(timeout=self.timeout) as client:
+            resp = await client.post(url, json=payload, headers=self._headers(telegram_user_id))
+            resp.raise_for_status()
+            return resp.json()
+
     async def create_task(
         self,
         telegram_user_id: int,
