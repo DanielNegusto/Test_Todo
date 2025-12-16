@@ -2,7 +2,7 @@ from typing import Any, Dict, List, Optional
 
 import httpx
 
-from .config import settings
+from config import settings
 
 
 class BackendAPI:

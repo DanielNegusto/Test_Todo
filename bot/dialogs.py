@@ -8,7 +8,7 @@ from aiogram_dialog.widgets.text import Const, Format
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
 
-from .api import BackendAPI
+from api import BackendAPI
 
 DATE_FORMAT = "%Y-%m-%d %H:%M"
 backend_api = BackendAPI()

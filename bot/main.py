@@ -8,9 +8,9 @@ from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram_dialog import DialogManager, setup_dialogs
 
-from .api import BackendAPI
-from .config import settings
-from .dialogs import CreateTaskSG, create_task_dialog
+from api import BackendAPI
+from config import settings
+from dialogs import CreateTaskSG, create_task_dialog
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
