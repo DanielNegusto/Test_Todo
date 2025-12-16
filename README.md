@@ -106,6 +106,8 @@
 - **BACKEND_API_BASE_URL**
   - Базовый URL backend для Telegram‑бота.
   - Внутри Docker‑сети это `http://backend:8000`.
+- **BOT_REQUEST_TIMEOUT**
+  - Таймаут (в секундах) для запросов бота к backend. По умолчанию `15`.
 
 - **TIME_ZONE**
   - Часовой пояс Django и Celery. По умолчанию `America/Adak`, как требуется по заданию.

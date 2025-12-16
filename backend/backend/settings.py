@@ -103,7 +103,14 @@ REST_FRAMEWORK = {
 CELERY_BROKER_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_TIMEZONE = TIME_ZONE
+CELERY_BEAT_SCHEDULE = {
+    "task-due-check": {
+        "task": "todo.tasks.send_task_due_notifications",
+        "schedule": 60.0,  # каждые 60 секунд
+    },
+}
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
+
 
 

@@ -6,22 +6,21 @@ from django.utils import timezone
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    """Категория задач, привязанная к конкретному пользователю."""
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="categories")
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        unique_together = ("user", "name")
+        ordering = ["name"]
 
     def __str__(self) -> str:
-        return self.name
+        return f"{self.name} ({self.user})"
 
 
 class Task(models.Model):
-    """
-    Task with a deterministic custom primary key.
-
-    The primary key is a short SHA256-based string derived from:
-    - user id
-    - title
-    - due_date (ISO format)
-    - created_at timestamp (seconds)
-    """
+    """Задача с детерминированным кастомным первичным ключом."""
 
     id = models.CharField(primary_key=True, max_length=32, editable=False)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="tasks")
@@ -40,10 +39,12 @@ class Task(models.Model):
         return f"{self.title} ({self.user})"
 
     def _build_pk_source(self) -> str:
+        """Формирует строку-основание для детерминированного PK."""
         created_ts = int(self.created_at.timestamp())
         return f"{self.user_id}:{self.title}:{self.due_date.isoformat()}:{created_ts}"
 
     def save(self, *args, **kwargs) -> None:
+        """Генерирует PK на основе SHA-256 и сохраняет задачу."""
         if not self.created_at:
             self.created_at = timezone.now()
         if not self.id:
@@ -54,11 +55,12 @@ class Task(models.Model):
 
 
 class UserProfile(models.Model):
+    """Профиль для связи Django-пользователя с Telegram."""
+
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
     telegram_user_id = models.BigIntegerField(unique=True, null=True, blank=True)
     telegram_chat_id = models.BigIntegerField(unique=True, null=True, blank=True)
 
     def __str__(self) -> str:
         return f"Profile for {self.user}"
-
 
