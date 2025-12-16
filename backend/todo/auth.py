@@ -26,7 +26,7 @@ class TelegramUserAuthentication(authentication.BaseAuthentication):
             return None
 
         try:
-            normalized_id = str(int(raw_id))
+            normalized_id = int(raw_id)
         except (TypeError, ValueError):
             return None
 

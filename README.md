@@ -178,6 +178,7 @@ docker-compose up --build
 Дополнительно можно открыть в браузере:
 - `http://localhost:8000/admin/` — панель администратора Django.
 - `http://localhost:8000/api/` — корень REST API.
+- 'http://localhost:8000/api/docs/' - корень Swagger
 
 ---
 

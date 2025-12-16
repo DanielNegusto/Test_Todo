@@ -60,7 +60,7 @@ async def _create_task(message: Message, dialog_manager: DialogManager, categori
     due_iso = _build_due_iso(dialog_manager)
     try:
         await backend_api.create_task(
-            telegram_user_id=message.from_user.id,
+            telegram_user_id=dialog_manager.event.from_user.id,
             title=dialog_manager.dialog_data.get("title"),
             description=dialog_manager.dialog_data.get("description", ""),
             due_date_iso=due_iso,
