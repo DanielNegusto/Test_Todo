@@ -7,7 +7,13 @@ from .models import Category, Task, UserProfile
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    """Сериализатор категорий, привязанных к пользователю."""
+    """Сериализатор категорий, привязанных к пользователю.
+
+    Используется для CRUD-операций с категориями:
+    - создание категории текущего пользователя;
+    - получение списка категорий;
+    - обновление и удаление.
+    """
 
     class Meta:
         model = Category
@@ -28,7 +34,14 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    """Сериализатор задач с поддержкой назначения категорий по именам."""
+    """Сериализатор задач с поддержкой назначения категорий по именам.
+
+    Позволяет:
+    - создавать задачи с привязкой к категориям (по id или по имени);
+    - читать детальную информацию о задаче;
+    - обновлять поля, включая статус выполнения;
+    - видеть технические поля (created_at, notification_sent).
+    """
 
     categories = CategorySerializer(many=True, read_only=True)
     category_ids = serializers.PrimaryKeyRelatedField(

@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "drf_spectacular",
     "todo",
 ]
 
@@ -99,6 +100,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 CELERY_BROKER_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
@@ -113,6 +115,14 @@ CELERY_BEAT_SCHEDULE = {
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_REQUEST_TIMEOUT = int(os.getenv("BOT_REQUEST_TIMEOUT", "15"))
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Telegram ToDo API",
+    "DESCRIPTION": "REST API для управления задачами и категориями, используемый Telegram-ботом.",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "COMPONENT_SPLIT_REQUEST": True,
+}
 
 
 
