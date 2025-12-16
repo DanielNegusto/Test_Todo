@@ -8,7 +8,6 @@ from aiogram import Bot, Dispatcher, Router
 from aiogram.filters import Command
 from aiogram.types import KeyboardButton, Message, ReplyKeyboardMarkup
 from aiogram_dialog import DialogManager, setup_dialogs
-from aiogram_dialog.manager.protocols import StartMode
 from dateutil import parser
 
 from api import BackendAPI
@@ -55,7 +54,8 @@ async def cmd_start(message: Message):
 async def cmd_newtask(message: Message, dialog_manager: DialogManager):
     """Запуск диалога создания задачи."""
     await _ensure_registered(message)
-    await dialog_manager.start(CreateTaskSG.title, mode=StartMode.RESET_STACK)
+    await dialog_manager.reset_stack()
+    await dialog_manager.start(CreateTaskSG.title)
 
 
 @router.message(Command("tasks"))

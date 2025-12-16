@@ -244,7 +244,6 @@ create_task_dialog = Dialog(
             id="date_custom",
             type_factory=str,
             on_success=on_date_custom,
-            prompt=Const("Или введите дату (например 2025-12-31):"),
         ),
         Row(
             Button(Const("⬅️ Назад"), id="back_to_categories", on_click=on_back_to_categories),
@@ -266,7 +265,6 @@ create_task_dialog = Dialog(
             id="time_custom",
             type_factory=str,
             on_success=on_time_custom,
-            prompt=Const("Введите время, например 18:30 или 18:30+03:00:"),
         ),
         Row(
             Button(Const("⬅️ Назад"), id="back_to_date", on_click=on_back_to_date),
